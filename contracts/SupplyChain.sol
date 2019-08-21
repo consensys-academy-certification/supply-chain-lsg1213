@@ -17,7 +17,7 @@ contract SupplyChain {
         uint price;
         State state;
         address payable seller;
-        address payable buyer;
+        address buyer;
     }
 
   // Create a variable named 'items' to map itemIds to Items.
@@ -26,7 +26,9 @@ contract SupplyChain {
   // Create an event to log all state changes for each item.
     event ItemLog(uint, string, State);
 
-
+    constructor () public {
+      owner = msg.sender;
+    }
   // Create a modifier named 'onlyOwner' where only the contract owner can proceed with the execution.
     modifier onlyOwner() {
         require(owner == msg.sender);
@@ -63,9 +65,8 @@ contract SupplyChain {
         items[itemIdCount].seller = msg.sender;
         items[itemIdCount].state = State.ForSale;
         
-        emit ItemLog(itemIdCount, _name, State.ForSale);
+        emit ItemLog(itemIdCount++, _name, State.ForSale);
         
-        itemIdCount++;
     }
     
   // Create a function named 'buyItem' that allows anyone to buy a specific Item by paying its price. The price amount should be transferred to the seller and any overpayment amount should be returned to the buyer.
@@ -97,7 +98,7 @@ contract SupplyChain {
     }
 
   // Create a function named 'getItem' that allows anyone to get all the information of a specific Item in the same order of the struct Item. 
-    function getItem(uint _itemId) public view returns(string memory, uint, State, address payable, address payable) {
+    function getItem(uint _itemId) public view returns(string memory, uint, State, address payable, address) {
         return (items[_itemId].name, items[_itemId].price, items[_itemId].state, items[_itemId].seller, items[_itemId].buyer);
     }
 
